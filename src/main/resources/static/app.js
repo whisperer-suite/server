@@ -5,18 +5,28 @@ $(document).ready(function() {
         $('#loading').toggleClass("hidden-xs-up");
         $('#app').toggleClass("hidden-xs-up");
         this.onmessage = function(e) {
-            $('#messages').append('<br/>server: ' + e.data);
+            addMessage(e.data);
         };
         $('#msgForm').submit(function() {
             var msg = $('#msg');
-            $('#messages').append('<br/>me: ' + msg.val());
-            sock.send(msg.val());
-            msg.val("");
+            var content = msg.val();
+            if (content != '') {
+                msg.val('');
+                addMessage('<strong>me:</strong> ' + content);
+                sock.send(content);
+            }
 
             return false;
         });
     };
     sock.onclose = function() {
         console.log('closed');
+        addMessage('Disconnected')
     };
 });
+
+function addMessage(msg) {
+    var container = $('#messages');
+    container.append('<br/>' + msg);
+    container.scrollTop(container[0].scrollHeight);
+}

@@ -5,7 +5,15 @@ $(document).ready(function() {
         $('#loading').toggleClass("hidden-xs-up");
         $('#app').toggleClass("hidden-xs-up");
         this.onmessage = function(e) {
-            addMessage(e.data);
+            console.log(e.data);
+            var event = JSON.parse(e.data);
+            if (event.type == 'MESSAGE') {
+                addMessage('<strong>' + event.payload.author + ':</strong> ' + event.payload.content);
+            } else if (event.type == 'USER_JOINED') {
+                addMessage('<strong> User joined: ' + event.payload.username + '</strong>');
+            } else if (event.type == 'USER_LEFT') {
+                addMessage('<strong> User left: ' + event.payload.username + '</strong>');
+            }
         };
         $('#msgForm').submit(function() {
             var msg = $('#msg');
@@ -13,7 +21,12 @@ $(document).ready(function() {
             if (content != '') {
                 msg.val('');
                 addMessage('<strong>me:</strong> ' + content);
-                sock.send(content);
+                sock.send(JSON.stringify({
+                    type: 'MESSAGE',
+                    payload: {
+                        content: content
+                    }
+                }));
             }
 
             return false;

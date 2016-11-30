@@ -99,6 +99,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
         <!-- H2 in-memory database JDBC driver -->
         <dependency>
             <groupId>com.h2database</groupId>

@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    var sock = new SockJS('/messages');
+    var sock = new SockJS('/message');
     sock.onopen = function() {
         console.log('opened');
         $('#loading').toggleClass("hidden-xs-up");

@@ -1,4 +1,4 @@
-package net.whisperersuite.server.events;
+package net.whisperersuite.server.event;
 
 import org.springframework.web.socket.WebSocketSession;
 

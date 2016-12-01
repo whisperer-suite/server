@@ -1,7 +1,7 @@
-package net.whisperersuite.server.messages;
+package net.whisperersuite.server.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.whisperersuite.server.events.messages.ChatEvent;
+import net.whisperersuite.server.payload.AbstractPayload;
 import net.whisperersuite.server.websocket.MessageHandler;
 import net.whisperersuite.server.websocket.WebSocketSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +14,18 @@ import java.io.IOException;
 import java.util.Iterator;
 
 @Component @Scope("singleton")
-public class MessageService {
+public class PayloadService {
     private final WebSocketSessionRegistry registry;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public MessageService(WebSocketSessionRegistry registry, ObjectMapper objectMapper) {
+    public PayloadService(WebSocketSessionRegistry registry, ObjectMapper objectMapper) {
         this.registry = registry;
         this.objectMapper = objectMapper;
     }
 
-    public void sendToAllUsersExcept(String username, ChatEvent chatEvent) throws IOException {
-        TextMessage textMessage = createTextMessage(chatEvent);
+    public void sendToAllUsersExcept(String username, AbstractPayload payload) throws IOException {
+        TextMessage textMessage = createTextMessage(payload);
 
         Iterator<WebSocketSession> iterator = registry.all();
         while (iterator.hasNext()) {
@@ -40,8 +40,8 @@ public class MessageService {
         }
     }
 
-    public void sendToAllSessionExcept(WebSocketSession session, ChatEvent chatEvent) throws IOException {
-        TextMessage textMessage = createTextMessage(chatEvent);
+    public void sendToAllSessionExcept(WebSocketSession session, AbstractPayload payload) throws IOException {
+        TextMessage textMessage = createTextMessage(payload);
 
         Iterator<WebSocketSession> iterator = registry.all();
         while (iterator.hasNext()) {
@@ -56,10 +56,10 @@ public class MessageService {
         }
     }
 
-    private TextMessage createTextMessage(ChatEvent chatEvent) throws IOException {
+    private TextMessage createTextMessage(AbstractPayload payload) throws IOException {
         MessageHandler.JsonEvent jsonEvent = new MessageHandler.JsonEvent();
-        jsonEvent.setType(chatEvent.eventType());
-        jsonEvent.setPayload(objectMapper.readTree(objectMapper.writeValueAsString(chatEvent)));
+        jsonEvent.setType(payload.getType());
+        jsonEvent.setPayload(objectMapper.readTree(objectMapper.writeValueAsString(payload)));
 
         return new TextMessage(objectMapper.writeValueAsString(jsonEvent));
     }

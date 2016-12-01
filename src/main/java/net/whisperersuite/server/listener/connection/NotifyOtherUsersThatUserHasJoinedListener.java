@@ -1,8 +1,8 @@
-package net.whisperersuite.server.listener.websocket;
+package net.whisperersuite.server.listener.connection;
 
-import net.whisperersuite.server.events.connection.ConnectionEstablishedEvent;
-import net.whisperersuite.server.events.messages.UserJoined;
-import net.whisperersuite.server.messages.MessageService;
+import net.whisperersuite.server.event.connection.ConnectionEstablishedEvent;
+import net.whisperersuite.server.payload.user.UserJoined;
+import net.whisperersuite.server.service.PayloadService;
 import net.whisperersuite.server.websocket.WebSocketSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -15,12 +15,12 @@ import java.util.Map;
 @Component
 public class NotifyOtherUsersThatUserHasJoinedListener {
     private final WebSocketSessionRegistry registry;
-    private final MessageService messageService;
+    private final PayloadService payloadService;
 
     @Autowired
-    public NotifyOtherUsersThatUserHasJoinedListener(WebSocketSessionRegistry registry, MessageService messageService) {
+    public NotifyOtherUsersThatUserHasJoinedListener(WebSocketSessionRegistry registry, PayloadService payloadService) {
         this.registry = registry;
-        this.messageService = messageService;
+        this.payloadService = payloadService;
     }
 
     @EventListener
@@ -32,6 +32,6 @@ public class NotifyOtherUsersThatUserHasJoinedListener {
             return;
         }
 
-        messageService.sendToAllUsersExcept(username, new UserJoined(username));
+        payloadService.sendToAllUsersExcept(username, new UserJoined(username));
     }
 }

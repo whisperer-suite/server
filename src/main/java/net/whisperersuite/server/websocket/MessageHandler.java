@@ -2,10 +2,11 @@ package net.whisperersuite.server.websocket;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.whisperersuite.server.events.connection.ConnectionClosedEvent;
-import net.whisperersuite.server.events.connection.ConnectionEstablishedEvent;
-import net.whisperersuite.server.events.messages.Message;
-import net.whisperersuite.server.events.messages.MessageSent;
+import net.whisperersuite.server.event.connection.ConnectionClosedEvent;
+import net.whisperersuite.server.event.connection.ConnectionEstablishedEvent;
+import net.whisperersuite.server.event.payload.PayloadReceivedEvent;
+import net.whisperersuite.server.payload.AbstractPayload;
+import net.whisperersuite.server.payload.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +51,31 @@ public class MessageHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws InterruptedException, IOException {
         JsonEvent jsonEvent = objectMapper.readValue(message.getPayload(), JsonEvent.class);
-        switch (jsonEvent.getType()) {
+        Class<? extends AbstractPayload> payloadClass = getPayloadClass(jsonEvent.getType());
+        PayloadReceivedEvent<? extends AbstractPayload> event = createReceivedEvent(payloadClass, jsonEvent.getPayload(), session);
+        eventPublisher.publishEvent(event);
+    }
+
+    private Class<? extends AbstractPayload> getPayloadClass(String typeName) {
+        switch (typeName) {
             case "MESSAGE":
-                Message msg = objectMapper.readerFor(Message.class).readValue(jsonEvent.getPayload());
-                msg.setAuthor(session.getPrincipal().getName());
-                eventPublisher.publishEvent(new MessageSent(session, msg));
-                break;
+                return Message.class;
             default:
-                throw new UnsupportedOperationException(jsonEvent.getType());
+                throw new UnsupportedOperationException(typeName);
         }
+    }
+
+    private <P extends AbstractPayload> PayloadReceivedEvent<P> createReceivedEvent(
+        Class<P> payloadClass,
+        JsonNode jsonPayload,
+        WebSocketSession session
+    ) throws IOException {
+        P payload = objectMapper.readerFor(payloadClass).readValue(jsonPayload);
+        if (payload instanceof Message) {
+            ((Message) payload).setAuthor(session.getPrincipal().getName());
+        }
+
+        return new PayloadReceivedEvent<>(session, payload);
     }
 
     public static class JsonEvent {

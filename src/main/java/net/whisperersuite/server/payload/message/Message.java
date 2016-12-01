@@ -1,6 +1,8 @@
-package net.whisperersuite.server.events.messages;
+package net.whisperersuite.server.payload.message;
 
-public class Message extends ChatEvent {
+import net.whisperersuite.server.payload.AbstractPayload;
+
+public class Message extends AbstractPayload {
     private String content;
     private String author;
 
@@ -18,10 +20,5 @@ public class Message extends ChatEvent {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    @Override
-    public String eventType() {
-        return "MESSAGE";
     }
 }

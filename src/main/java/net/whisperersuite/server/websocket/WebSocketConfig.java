@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
-            .addHandler(webSocketHandler, "/messages")
+            .addHandler(webSocketHandler, "/message")
                 .setAllowedOrigins("*")
                 .withSockJS()
         ;

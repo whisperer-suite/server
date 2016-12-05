@@ -20,8 +20,10 @@ public class RelayMessagesListener {
 
     @EventListener
     public void handleEvent(PayloadReceivedEvent event) throws IOException {
-        if (event.getPayload() instanceof Message) {
-            payloadService.sendToAllSessionExcept(event.getSession(), event.getPayload());
+        if (!(event.getPayload() instanceof Message)) {
+            return;
         }
+
+        payloadService.sendToAllSessionExcept(event.getSession(), event.getPayload());
     }
 }

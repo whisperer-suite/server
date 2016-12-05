@@ -28,7 +28,7 @@ public class NotifyOtherUsersThatUserHasJoinedListener {
         String username = event.getSession().getPrincipal().getName();
 
         Map<String, WebSocketSession> userSessions = registry.getByUsername(username);
-        if (userSessions == null || userSessions.size() > 1) {
+        if (userSessions != null && userSessions.size() > 1) {
             return;
         }
 

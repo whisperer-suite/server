@@ -8,3 +8,10 @@ jdk:
   - openjdk7
   - oraclejdk7
   - oraclejdk8
+
+env:
+  global:
+    - secure: cRtYZ1Zt0krQcwdHNkRD6z9F/N35ViSNhNmEecWPaeqRF64JFP+LyuNDuhk9hgHTGIEcUmgRpA+8sfrTHV8SM6TnDxQ41PS38MH0/atGSuGzvG6AoQLvR4RDOWq6RUErHRjSBeJeaBv6DOAkOXt2sRVQcE6tnovo8vRjSleJs3J160CO2Jr1Q1k/naVie/b1W2QaD+KEaGCGuNL1S5VMRRPNbj42MiCmargDAXKosoa2RgxLh2+j1kMf4dGht1QVd1AqjKknyd+mHd3XEKEV2svIlO8aJksg1MCbcxV5PXR26fYHd0naai3IS3pp2hn26GiQYNxfQDxDtoK97KbYAjb8ZUkI+tSEhWEZR8agvo8ACEZsXlzt/xVR5Ozheyvsf8KFcuvSXl6XWhoU/7EirqHFPjy9KEmXvW5AsxWqhtvOWL3jahzOi8L7idU9TwQn2oW8QlMYfBMLQM44zQBedc061Oyt0eqnDY/dWpqPLyb2jsj9j0VS939XX+Wsp1iXRFNk3jAXInlZUMcTyj0YDkykOXCPksBPlE6h/bJQQpAU40Ojj6gRyndFGwfe3lwMS10rehe6CDCO8T5WjZyNM15mz/wa9zX9WfJULx4QgNfl0h3VuP5f1WdzV4apeP9Gr/hk3iXFXEv0tkE/LrqVl7QbwxpJ3NnSVuEyzhaLxPA=
+
+after_success:
+  - mvn clean test jacoco:report coveralls:report

@@ -7,18 +7,18 @@ $(document).ready(function() {
         this.onmessage = function(e) {
             console.log(e.data);
             var event = JSON.parse(e.data);
-            if (event.type == 'MESSAGE') {
+            if (event.type === 'MESSAGE') {
                 addMessage('<strong>' + event.payload.author + ':</strong> ' + event.payload.content);
-            } else if (event.type == 'USER_JOINED') {
+            } else if (event.type === 'USER_JOINED') {
                 addMessage('<strong> User joined: ' + event.payload.username + '</strong>');
-            } else if (event.type == 'USER_LEFT') {
+            } else if (event.type === 'USER_LEFT') {
                 addMessage('<strong> User left: ' + event.payload.username + '</strong>');
             }
         };
         $('#msgForm').submit(function() {
             var msg = $('#msg');
             var content = msg.val();
-            if (content != '') {
+            if (content !== '') {
                 msg.val('');
                 addMessage('<strong>me:</strong> ' + content);
                 sock.send(JSON.stringify({

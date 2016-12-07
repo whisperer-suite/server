@@ -1,29 +1,26 @@
 package net.whisperersuite.server;
 
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.BeansException;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.boot.SpringApplication;
 
-import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-public class ApplicationTest  implements ApplicationContextAware {
-    private ApplicationContext applicationContext;
-
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(SpringApplication.class)
+public class ApplicationTest {
     @Test
-    public void contextLoads() throws Exception {
-        // tests whether the app loads at all
-        assertNotNull(applicationContext);
-    }
+    public void main() throws Exception {
+        PowerMockito.mockStatic(SpringApplication.class);
+        PowerMockito.when(SpringApplication.run(Application.class)).thenReturn(null);
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+        Application.main(new String[] {});
+
+        PowerMockito.verifyStatic();
+        SpringApplication.run(eq(Application.class));
     }
 }

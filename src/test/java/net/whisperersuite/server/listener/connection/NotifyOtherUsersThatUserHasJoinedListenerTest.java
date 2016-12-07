@@ -3,7 +3,7 @@ package net.whisperersuite.server.listener.connection;
 import net.whisperersuite.server.event.connection.ConnectionEstablishedEvent;
 import net.whisperersuite.server.payload.user.UserJoined;
 import net.whisperersuite.server.service.PayloadService;
-import net.whisperersuite.server.websocket.WebSocketSessionRegistry;
+import net.whisperersuite.server.websocket.registry.WebSocketSessionRegistry;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.socket.WebSocketSession;
@@ -32,7 +32,7 @@ public class NotifyOtherUsersThatUserHasJoinedListenerTest {
         when(session.getPrincipal()).thenReturn(principal);
         when(principal.getName()).thenReturn(USER_NAME);
         when(session.getId()).thenReturn("1");
-        registry.register(session, USER_NAME);
+        registry.register(session);
     }
 
     @Test
@@ -47,7 +47,12 @@ public class NotifyOtherUsersThatUserHasJoinedListenerTest {
     public void handleEventAlreadyIn() throws Exception {
         WebSocketSession session2 = mock(WebSocketSession.class);
         when(session2.getId()).thenReturn("2");
-        registry.register(session2, USER_NAME);
+
+        Principal principal = mock(Principal.class);
+        when(principal.getName()).thenReturn(USER_NAME);
+        when(session2.getPrincipal()).thenReturn(principal);
+
+        registry.register(session2);
 
         assertNotNull(listener);
         listener.handleEvent(new ConnectionEstablishedEvent(session));

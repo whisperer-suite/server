@@ -9,5 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class ApplicationTest {
     @Test
-    public void contextLoads() throws Exception {}
+    public void contextLoads() throws Exception {
+        // tests whether the app loads at all
+    }
 }

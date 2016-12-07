@@ -7,6 +7,7 @@ import net.whisperersuite.server.event.connection.ConnectionEstablishedEvent;
 import net.whisperersuite.server.event.payload.PayloadReceivedEvent;
 import net.whisperersuite.server.payload.AbstractPayload;
 import net.whisperersuite.server.payload.message.Message;
+import net.whisperersuite.server.websocket.registry.WebSocketSessionRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +37,23 @@ public class MessageHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("User '{}' connected", session.getPrincipal().getName());
-        registry.register(session, session.getPrincipal().getName());
+        log.info(
+            "User '{}' connected",
+            session.getPrincipal() == null ? "anonymous" : session.getPrincipal().getName()
+        );
+
+        registry.register(session);
         eventPublisher.publishEvent(new ConnectionEstablishedEvent(session));
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        log.info("User '{}' disconnected: {}", session.getPrincipal().getName(), status.getReason());
+        log.info(
+            "User '{}' disconnected: {}",
+            session.getPrincipal() == null ? "anonymous" : session.getPrincipal().getName(),
+            status.getReason()
+        );
+
         registry.unregister(session);
         eventPublisher.publishEvent(new ConnectionClosedEvent(session));
     }

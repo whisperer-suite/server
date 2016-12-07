@@ -3,7 +3,7 @@ package net.whisperersuite.server.listener.connection;
 import net.whisperersuite.server.event.connection.ConnectionClosedEvent;
 import net.whisperersuite.server.payload.user.UserLeft;
 import net.whisperersuite.server.service.PayloadService;
-import net.whisperersuite.server.websocket.WebSocketSessionRegistry;
+import net.whisperersuite.server.websocket.registry.WebSocketSessionRegistry;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.socket.WebSocketSession;
@@ -35,17 +35,20 @@ public class NotifyOtherUsersThatUserHasLeftListenerTest {
         when(session.getPrincipal()).thenReturn(principal);
         when(principal.getName()).thenReturn(USER_NAME);
         when(session.getId()).thenReturn("1");
-        registry.register(session, USER_NAME);
+        registry.register(session);
 
         session2 = mock(WebSocketSession.class);
         when(session2.getId()).thenReturn("2");
-        registry.register(session2, USER_NAME);
+        principal = mock(Principal.class);
+        when(session2.getPrincipal()).thenReturn(principal);
+        when(principal.getName()).thenReturn(USER_NAME);
+        registry.register(session2);
     }
 
     @Test
     public void handleEvent() throws Exception {
-        registry.unregister(session2.getId());
-        registry.unregister(session.getId());
+        registry.unregister(session2);
+        registry.unregister(session);
 
         assertNotNull(listener);
         listener.handleEvent(new ConnectionClosedEvent(session));
@@ -55,7 +58,7 @@ public class NotifyOtherUsersThatUserHasLeftListenerTest {
 
     @Test
     public void handleEventNotYetOut() throws Exception {
-        registry.unregister(session.getId());
+        registry.unregister(session);
 
         assertNotNull(listener);
         listener.handleEvent(new ConnectionClosedEvent(session));

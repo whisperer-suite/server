@@ -2,7 +2,7 @@ package net.whisperersuite.server.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.whisperersuite.server.payload.AbstractPayload;
-import net.whisperersuite.server.websocket.WebSocketSessionRegistry;
+import net.whisperersuite.server.websocket.registry.WebSocketSessionRegistry;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.socket.WebSocketMessage;
@@ -28,16 +28,16 @@ public class PayloadServiceTest {
         when(mapper.writeValueAsString(any(AbstractPayload.class))).thenReturn("{}");
 
         session1 = mockWebSocketSession(1, "user1");
-        registry.register(session1, session1.getPrincipal().getName());
+        registry.register(session1);
 
         session2 = mockWebSocketSession(2, "user1");
-        registry.register(session2, session2.getPrincipal().getName());
+        registry.register(session2);
 
         session3 = mockWebSocketSession(3, "user2");
-        registry.register(session3, session3.getPrincipal().getName());
+        registry.register(session3);
 
         session4 = mockWebSocketSession(4, "user2");
-        registry.register(session4, session4.getPrincipal().getName());
+        registry.register(session4);
 
         service = new PayloadService(registry, mapper);
         payload = mock(AbstractPayload.class);

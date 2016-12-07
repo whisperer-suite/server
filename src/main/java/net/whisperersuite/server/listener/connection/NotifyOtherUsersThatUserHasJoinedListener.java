@@ -3,14 +3,14 @@ package net.whisperersuite.server.listener.connection;
 import net.whisperersuite.server.event.connection.ConnectionEstablishedEvent;
 import net.whisperersuite.server.payload.user.UserJoined;
 import net.whisperersuite.server.service.PayloadService;
-import net.whisperersuite.server.websocket.WebSocketSessionRegistry;
+import net.whisperersuite.server.websocket.registry.WebSocketSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Collection;
 
 @Component
 public class NotifyOtherUsersThatUserHasJoinedListener {
@@ -27,7 +27,7 @@ public class NotifyOtherUsersThatUserHasJoinedListener {
     public void handleEvent(ConnectionEstablishedEvent event) throws IOException {
         String username = event.getSession().getPrincipal().getName();
 
-        Map<String, WebSocketSession> userSessions = registry.getByUsername(username);
+        Collection<WebSocketSession> userSessions = registry.getByPrincipalName(username);
         if (userSessions != null && userSessions.size() > 1) {
             return;
         }

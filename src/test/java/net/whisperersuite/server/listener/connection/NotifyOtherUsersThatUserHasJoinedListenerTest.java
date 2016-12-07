@@ -10,6 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.security.Principal;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class NotifyOtherUsersThatUserHasJoinedListenerTest {
@@ -36,6 +37,7 @@ public class NotifyOtherUsersThatUserHasJoinedListenerTest {
 
     @Test
     public void handleEvent() throws Exception {
+        assertNotNull(listener);
         listener.handleEvent(new ConnectionEstablishedEvent(session));
 
         verify(service, times(1)).sendToAllUsersExcept(eq(USER_NAME), any((UserJoined.class)));
@@ -47,6 +49,7 @@ public class NotifyOtherUsersThatUserHasJoinedListenerTest {
         when(session2.getId()).thenReturn("2");
         registry.register(session2, USER_NAME);
 
+        assertNotNull(listener);
         listener.handleEvent(new ConnectionEstablishedEvent(session));
 
         verify(service, never()).sendToAllUsersExcept(eq(USER_NAME), any((UserJoined.class)));

@@ -10,6 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.security.Principal;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -46,6 +47,7 @@ public class NotifyOtherUsersThatUserHasLeftListenerTest {
         registry.unregister(session2.getId());
         registry.unregister(session.getId());
 
+        assertNotNull(listener);
         listener.handleEvent(new ConnectionClosedEvent(session));
 
         verify(service, times(1)).sendToAllUsersExcept(eq(USER_NAME), any(UserLeft.class));
@@ -55,6 +57,7 @@ public class NotifyOtherUsersThatUserHasLeftListenerTest {
     public void handleEventNotYetOut() throws Exception {
         registry.unregister(session.getId());
 
+        assertNotNull(listener);
         listener.handleEvent(new ConnectionClosedEvent(session));
 
         verify(service, never()).sendToAllUsersExcept(eq(USER_NAME), any(UserLeft.class));

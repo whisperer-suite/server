@@ -8,11 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.socket.WebSocketSession;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class RelayMessagesListenerTest {
     private PayloadService service;
@@ -30,6 +29,7 @@ public class RelayMessagesListenerTest {
         Message message = mock(Message.class);
         PayloadReceivedEvent<Message> event = new PayloadReceivedEvent<>(session, message);
 
+        assertNotNull(listener);
         listener.handleEvent(event);
 
         verify(service).sendToAllSessionExcept(same(session), same(message));
@@ -41,6 +41,7 @@ public class RelayMessagesListenerTest {
         AbstractPayload notMessage = mock(AbstractPayload.class);
         PayloadReceivedEvent<AbstractPayload> event = new PayloadReceivedEvent<>(session, notMessage);
 
+        assertNotNull(listener);
         listener.handleEvent(event);
 
         verify(service, never()).sendToAllSessionExcept(any(WebSocketSession.class), any(AbstractPayload.class));

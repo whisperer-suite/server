@@ -10,6 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.security.Principal;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class PayloadServiceTest {
@@ -44,6 +45,7 @@ public class PayloadServiceTest {
 
     @Test
     public void sendToAllUsersExcept() throws Exception {
+        assertNotNull(service);
         service.sendToAllUsersExcept("user1", payload);
 
         verify(session1, never()).sendMessage(any(WebSocketMessage.class));
@@ -55,6 +57,7 @@ public class PayloadServiceTest {
 
     @Test
     public void sendToAllSessionExcept() throws Exception {
+        assertNotNull(service);
         service.sendToAllSessionExcept(session1, payload);
 
         verify(session1, never()).sendMessage(any(WebSocketMessage.class));

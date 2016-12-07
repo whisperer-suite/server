@@ -19,9 +19,13 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
-            .addHandler(webSocketHandler, "/message")
-                .setAllowedOrigins("*")
-                .withSockJS()
+            .addHandler(webSocketHandler, "/websocket")
+            .setAllowedOrigins("*")
+        ;
+        registry
+            .addHandler(webSocketHandler, "/sockjs")
+            .setAllowedOrigins("*")
+            .withSockJS()
         ;
     }
 }

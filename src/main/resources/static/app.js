@@ -10,10 +10,10 @@ $(document).ready(function() {
     if (typeof WebSocket !== "undefined") {
         let protocol = window.location.protocol === "http:" ? "ws:" : "wss:";
         sock = new WebSocket(protocol + "//" + window.location.host + "/websocket");
-        type = "WebSocket"
+        type = "WebSocket";
     } else if (typeof SockJS !== "undefined") {
         sock = new SockJS("/sockjs");
-        type = "SockJS"
+        type = "SockJS";
     } else {
         $("#loading-title").innerHTML = "Error: no support for WebSocket or SockJS";
         return;

@@ -1,3 +1,6 @@
+/*global SockJS*/
+/*eslint no-undef: "error"*/
+
 function addMessage(msg) {
     let container = $("#messages");
     container.append("<br/>" + msg);

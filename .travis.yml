@@ -21,4 +21,4 @@ before_install:
 
 after_success:
   - mvn jacoco:report coveralls:report
-  - ~/jpm/bin/codacy-coverage-reporter -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
+  - ~/jpm/bin/codacy-coverage-reporter -l Java -r target/site/jacoco/jacoco.xml
